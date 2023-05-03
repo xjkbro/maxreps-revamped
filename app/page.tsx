@@ -7,6 +7,7 @@ import { NavigationMenuDemo } from "@/components/NavigationMenuDemo";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+export const revalidate = 3600;
 export default function Home() {
     return (
         <main className="flex h-screen flex-col bg-gray-100">
