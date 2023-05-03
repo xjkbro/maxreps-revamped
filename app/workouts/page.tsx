@@ -23,7 +23,9 @@ export default function dashboard() {
                 </div>
             </div>
             <div className="pb-12 max-w-[75%] mx-auto">
-                <h1 className="my-4 text-[2rem] font-bold">Dashboard</h1>
+                <div className="flex items-center gap-4">
+                    <h1 className="my-4 text-[2rem] font-bold">Workouts</h1>
+                </div>
                 <section className="flex gap-4">
                     <div className="w-2/3 flex flex-col gap-4 overflow-y-hidden h-fit">
                         <StatusCard />

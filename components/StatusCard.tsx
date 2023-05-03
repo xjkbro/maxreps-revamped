@@ -34,12 +34,18 @@ export default function StatusCard() {
             </div>
             <hr />
             <div className="p-4">
-                <CardContent className="p-0 mb-4">
+                <CardContent className="p-0 mb-4 min-h-[2rem]">
                     <p>Card Content</p>
                 </CardContent>
-                <CardFooter className="p-0 flex gap-4 w-full text-sm text-gray-500">
-                    <span>(14) Like</span>
-                    <span>(3) Comment</span>
+                <CardFooter className="p-0 flex justify-between w-full text-sm text-gray-500">
+                    <div className="gap-4 flex ">
+                        <Button variant={"link"} className="text-xs">
+                            (14) Like
+                        </Button>
+                        <Button variant={"link"} className="text-xs">
+                            (3) Comment
+                        </Button>
+                    </div>
                     <span>Feb 23, 2023 @ 10:45am</span>
                 </CardFooter>
             </div>
