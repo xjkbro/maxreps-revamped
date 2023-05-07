@@ -1,9 +1,11 @@
-import React from "react";
 import StatusCard from "@/components/StatusCard";
 import UpdateStatusCard from "@/components/UpdateStatusCard";
 import { LocationPicker } from "@/components/LocationPicker";
+import { Skeleton } from "@/components/ui/skeleton";
+import { prisma } from "@/lib/db";
 
-export default function dashboard() {
+export default async function Dashboard() {
+    const posts = await getPosts();
     return (
         <div className="pb-12 max-w-[75%] mx-auto">
             <div className="flex items-center gap-4">
@@ -12,12 +14,13 @@ export default function dashboard() {
             </div>
             <section className="flex gap-4">
                 <div className="w-2/3 flex flex-col gap-4 overflow-y-hidden h-fit">
-                    <StatusCard />
-                    <StatusCard />
-                    <StatusCard />
-                    <StatusCard />
-                    <StatusCard />
-                    <StatusCard />
+                    {posts ? (
+                        posts.map((post, index) => (
+                            <StatusCard key={index} post={post} />
+                        ))
+                    ) : (
+                        <Skeleton />
+                    )}
                 </div>
                 <div className="w-1/3">
                     <UpdateStatusCard />
@@ -26,3 +29,14 @@ export default function dashboard() {
         </div>
     );
 }
+
+const getPosts = async () => {
+    "use server";
+    // const prisma = new PrismaClient();
+    const posts = await prisma.post.findMany({
+        select: {
+            content: true,
+        },
+    });
+    return posts;
+};

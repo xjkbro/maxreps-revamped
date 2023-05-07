@@ -81,7 +81,7 @@ export function WorkoutLogs({ className, ...props }: CardProps) {
                         <div>165 for 4</div>
                     </AlertDescription>
                 </Alert>
-                <Alert className="relative">
+                {/* <Alert className="relative">
                     <div className="absolute right-8 top-3 flex items-center gap-4">
                         <TooltipProvider>
                             <Tooltip>
@@ -113,9 +113,9 @@ export function WorkoutLogs({ className, ...props }: CardProps) {
                         <Separator orientation="vertical" />
                         <div>165 for 4</div>
                     </AlertDescription>
-                </Alert>
+                </Alert> */}
 
-                <Alert className="relative">
+                {/* <Alert className="relative">
                     <div className="absolute right-8 top-3 flex items-center gap-4">
                         <TooltipProvider>
                             <Tooltip>
@@ -213,7 +213,7 @@ export function WorkoutLogs({ className, ...props }: CardProps) {
                         <Separator orientation="vertical" />
                         <div>165 for 4</div>
                     </AlertDescription>
-                </Alert>
+                </Alert> */}
             </CardContent>
             <CardFooter>
                 {/* <Button className="w-full">

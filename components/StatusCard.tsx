@@ -12,7 +12,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 
-export default function StatusCard() {
+export default function StatusCard({ post }) {
     return (
         <Card className="">
             <div className="flex items-center justify-between gap-4 p-4">
@@ -35,7 +35,7 @@ export default function StatusCard() {
             <hr />
             <div className="p-4">
                 <CardContent className="p-0 mb-4 min-h-[2rem]">
-                    <p>Card Content</p>
+                    <p>{post.content}</p>
                 </CardContent>
                 <CardFooter className="p-0 flex justify-between w-full text-sm text-gray-500">
                     <div className="gap-4 flex ">

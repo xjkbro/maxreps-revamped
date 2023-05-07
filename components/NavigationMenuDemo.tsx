@@ -13,6 +13,8 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import Image from "next/image";
+import { Dumbbell } from "lucide-react";
 // import { Icons } from "@/components/icons"
 
 const components: { title: string; href: string; description: string }[] = [
@@ -59,7 +61,7 @@ export function NavigationMenuDemo() {
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuTrigger className="bg-transparent">
-                        Getting started
+                        Dashboard
                     </NavigationMenuTrigger>
                     <NavigationMenuContent className="left-auto">
                         <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] justify-center lg:grid-cols-[.75fr_1fr]">
@@ -69,41 +71,43 @@ export function NavigationMenuDemo() {
                                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                                         href="/"
                                     >
-                                        {/* <Icons.logo className="h-6 w-6" /> */}
+                                        <Dumbbell className="h-6 w-6" />
                                         <div className="mb-2 mt-4 text-lg font-medium">
-                                            shadcn/ui
+                                            MaxReps
                                         </div>
                                         <p className="text-sm leading-tight text-muted-foreground">
-                                            Beautifully designed components
-                                            built with Radix UI and Tailwind
-                                            CSS.
+                                            One rep closer to your fitness
+                                            goals.
                                         </p>
                                     </a>
                                 </NavigationMenuLink>
                             </li>
-                            <ListItem href="/docs" title="Introduction">
-                                Re-usable components built using Radix UI and
-                                Tailwind CSS.
+                            <ListItem
+                                href="/dashboard/workouts"
+                                title="Workouts"
+                            >
+                                Log your workouts by weights and reps per day.
                             </ListItem>
                             <ListItem
-                                href="/docs/installation"
-                                title="Installation"
+                                href="/dashboard/diary"
+                                title="Food Diary"
                             >
-                                How to install dependencies and structure your
-                                app.
+                                Keep your macros in check with an intuitive food
+                                diary
                             </ListItem>
                             <ListItem
-                                href="/docs/primitives/typography"
-                                title="Typography"
+                                href="/dashboard/programs"
+                                title="Programs"
                             >
-                                Styles for headings, paragraphs, lists...etc
+                                By leading fitness coaches, a new way to
+                                approach your fitness journey.
                             </ListItem>
                         </ul>
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <NavigationMenuTrigger className=" bg-transparent">
-                        Components
+                        Tools
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
@@ -120,13 +124,13 @@ export function NavigationMenuDemo() {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <Link href="/docs" legacyBehavior passHref>
+                    <Link href="/settings" legacyBehavior passHref>
                         <NavigationMenuLink
                             className={
                                 navigationMenuTriggerStyle() + " bg-transparent"
                             }
                         >
-                            Documentation
+                            Settings
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
