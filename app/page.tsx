@@ -6,9 +6,10 @@ import { SignInButton, SignOutButton } from "@clerk/nextjs";
 import { NavigationMenuDemo } from "@/components/NavigationMenuDemo";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { withClerkMiddleware, getAuth } from "@clerk/nextjs/server";
 
 export const revalidate = 3600;
-export default function Home() {
+export default async function Home() {
     return (
         <main className="flex h-screen flex-col bg-gray-100">
             <section className="my-12 text-center">
@@ -31,7 +32,14 @@ export default function Home() {
             </section>
             <section className="flex flex-col items-center gap-2">
                 <SignedIn />
-
+                <Link href="/sign-in">
+                    <Button
+                        variant={"outline"}
+                        className=" w-full max-w-sm rounded-full  bg-gray-300 p-4 text-center transition-all hover:bg-gray-200"
+                    >
+                        Sign In
+                    </Button>
+                </Link>
                 <Link href="/dashboard">
                     <Button
                         variant={"outline"}

@@ -241,7 +241,7 @@ const CreateSetInputs = ({ entry: { entrySets, setEntrySets } }) => {
             ))}
             {entrySets.length < 10 && (
                 <Button
-                    className="flex flex-col gap-2 h-full text-gray-500 min-h-[6rem]"
+                    className="flex flex-col gap-2 h-full border border-dashed text-gray-500 min-h-[6rem]"
                     variant={"outline"}
                     onClick={(e) => {
                         e.preventDefault();

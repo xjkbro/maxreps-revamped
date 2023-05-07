@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import { Dumbbell } from "lucide-react";
+import { useClerk } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import { SignOutButton } from "@clerk/nextjs";
 // import { Icons } from "@/components/icons"
 
 const components: { title: string; href: string; description: string }[] = [
@@ -56,6 +59,7 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export function NavigationMenuDemo() {
+    const { signOut } = useClerk();
     return (
         <NavigationMenu className="justify-end">
             <NavigationMenuList>
@@ -133,6 +137,31 @@ export function NavigationMenuDemo() {
                             Settings
                         </NavigationMenuLink>
                     </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                    {/* <Link href="/sign" legacyBehavior passHref>
+                        <NavigationMenuLink
+                            className={
+                                navigationMenuTriggerStyle() + " bg-transparent"
+                            }
+                        >
+                            Settings
+                        </NavigationMenuLink>
+                    </Link> */}
+                    <button
+                        onClick={() => {
+                            signOut();
+                            redirect("/");
+                        }}
+                    >
+                        <NavigationMenuLink
+                            className={
+                                navigationMenuTriggerStyle() + " bg-transparent"
+                            }
+                        >
+                            Sign Out
+                        </NavigationMenuLink>
+                    </button>
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>

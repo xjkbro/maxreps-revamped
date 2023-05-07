@@ -14,11 +14,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
-export default function UpdateStatusCard() {
+import { auth, currentUser } from "@clerk/nextjs/app-beta";
+
+export default async function UpdateStatusCard() {
+    const { userId } = auth();
+    const user = await currentUser();
     async function addUpdate(data) {
         "use server";
         await prisma.post.create({
-            data: { content: data.get("status"), userId: "asd" },
+            data: { content: data.get("status"), userId: userId },
         });
         redirect("/dashboard");
     }
@@ -27,12 +31,15 @@ export default function UpdateStatusCard() {
             <div className="flex items-center justify-between gap-4 p-4">
                 <div className="flex gap-4 items-center">
                     <Avatar className="">
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage src={user?.profileImageUrl} />
+                        <AvatarFallback>
+                            {user?.firstName?.substr(0, 1)}
+                            {user?.lastName?.substr(0, 1)}
+                        </AvatarFallback>
                     </Avatar>
                     <CardHeader className="p-0">
                         <CardTitle className="flex gap-4">
-                            <Link href="/dashboard">Update to Home Gym</Link>
+                            <Link href="/dashboard">Update Status</Link>
                         </CardTitle>
                     </CardHeader>
                 </div>

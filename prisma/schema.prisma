@@ -8,9 +8,38 @@ datasource db {
   relationMode = "prisma"
 }
 
+model User {
+  userId       String         @unique
+  username     String?        @unique
+  firstName    String?
+  lastName     String?
+  avatar       String?
+  email        String?
+  posts        Post[]
+  postComments PostComments[]
+}
+
 model Post {
-  id      Int     @id @default(autoincrement())
-  content String
-  likes   Int     @default(0)
-  userId  String?
+  id        Int            @id @default(autoincrement())
+  content   String
+  likes     Int            @default(0)
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [userId])
+  userId    String
+  comments  PostComments[]
+
+  @@index([userId])
+}
+
+model PostComments {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [userId])
+  userId    String
+  Post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+
+  @@index([userId])
+  @@index([postId])
 }
