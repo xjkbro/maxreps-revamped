@@ -1,17 +1,19 @@
 import Image from "next/image";
 import { Josefin_Sans } from "next/font/google";
 const josefinSans = Josefin_Sans({ subsets: ["latin"] });
-import { SignedIn, SignedOut } from "@clerk/nextjs/app-beta";
+import { SignedIn, SignedOut, auth } from "@clerk/nextjs/app-beta";
 import { SignInButton, SignOutButton } from "@clerk/nextjs";
 import { NavigationMenuDemo } from "@/components/NavigationMenuDemo";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { withClerkMiddleware, getAuth } from "@clerk/nextjs/server";
+import { RedirectButtons } from "./RedirectButtons";
 
 export const revalidate = 3600;
 export default async function Home() {
+    const { sessionId } = auth();
     return (
-        <main className="flex h-screen flex-col bg-gray-100">
+        <main className="flex h-screen items-center justify-center flex-col bg-gray-100">
             <section className="my-12 text-center">
                 <h1
                     className={
@@ -30,25 +32,8 @@ export default async function Home() {
                     One Rep closer to your fitness goals
                 </p>
             </section>
-            <section className="flex flex-col items-center gap-2">
-                <SignedIn />
-                <Link href="/sign-in">
-                    <Button
-                        variant={"outline"}
-                        className=" w-full max-w-sm rounded-full  bg-gray-300 p-4 text-center transition-all hover:bg-gray-200"
-                    >
-                        Sign In
-                    </Button>
-                </Link>
-                <Link href="/dashboard">
-                    <Button
-                        variant={"outline"}
-                        className=" w-full max-w-sm rounded-full  bg-gray-300 p-4 text-center transition-all hover:bg-gray-200"
-                    >
-                        Go to the Dashboard
-                    </Button>
-                </Link>
-            </section>
+            <RedirectButtons />
+
             {/* <div>{!!user.isSignedIn && <SignOutButton />}</div> */}
         </main>
     );

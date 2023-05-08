@@ -27,35 +27,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { prisma } from "@/lib/db";
 import LikeButtons from "./LikeButtons";
 
+import { addLike, removeLike } from "@/lib/_actions/likes";
+import { getPost } from "@/lib/_actions/posts";
 export default async function StatusCard({ post: status }) {
     console.log(status);
     const { userId } = auth();
-    const post = await prisma.post.findUnique({
-        where: { id: status.id },
-        include: { user: true, likes: true, comments: true },
-    });
-
-    const addLike = async () => {
-        "use server";
-        const data = await prisma.likesOnPost.create({
-            data: {
-                postId: status.id,
-                likeId: userId,
-            },
-        });
-    };
-    const removeLike = async () => {
-        "use server";
-
-        const data = await prisma.likesOnPost.delete({
-            where: {
-                postId_likeId: {
-                    likeId: userId,
-                    postId: status.id,
-                },
-            },
-        });
-    };
+    const post = await getPost(status.id);
     return (
         <Card className="">
             <div className="flex items-center justify-between gap-4 p-4">
@@ -70,7 +47,7 @@ export default async function StatusCard({ post: status }) {
                     <CardHeader className="p-0">
                         <CardTitle className="flex gap-4">
                             <Link href={`/users/${post.user.username}`}>
-                                @{post.user.username}
+                                {post.user.username}
                             </Link>
                         </CardTitle>
                     </CardHeader>
@@ -87,22 +64,16 @@ export default async function StatusCard({ post: status }) {
                 </CardContent>
                 <CardFooter className="p-0 flex justify-between w-full text-sm text-gray-500">
                     <div className="gap-4 flex ">
-                        {/* {post?.likes.find(
-                            (likedUsers) => likedUsers.likeId == userId
-                        ) ? (
-                            <form action={removeLike}>
-                                <Button className="text-xs">
-                                    ({post.likes.length}) Like
-                                </Button>
-                            </form>
-                        ) : (
-                            <form action={addLike}>
-                                <Button variant={"outline"} className="text-xs">
-                                    ({post.likes.length}) Like
-                                </Button>
-                            </form>
-                        )} */}
-                        <LikeButtons post={post} />
+                        <LikeButtons
+                            post={post}
+                            userLiked={
+                                post.likes.find(
+                                    (likedUsers) => likedUsers.likeId === userId
+                                )
+                                    ? true
+                                    : false
+                            }
+                        />
 
                         <Dialog>
                             <DialogTrigger asChild>
@@ -125,7 +96,7 @@ export default async function StatusCard({ post: status }) {
                                                         className="font-semibold hover:underline"
                                                         href={`/users/${post.user.username}`}
                                                     >
-                                                        @{post.user.username}
+                                                        {post.user.username}
                                                     </Link>
                                                     {": "}
                                                     <span>

@@ -16,8 +16,9 @@ import {
 import Image from "next/image";
 import { Dumbbell } from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
 // import { Icons } from "@/components/icons"
 
 const components: { title: string; href: string; description: string }[] = [
@@ -60,6 +61,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function NavigationMenuDemo() {
     const { signOut } = useClerk();
+    const router = useRouter();
     return (
         <NavigationMenu className="justify-end">
             <NavigationMenuList>
@@ -139,19 +141,11 @@ export function NavigationMenuDemo() {
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    {/* <Link href="/sign" legacyBehavior passHref>
-                        <NavigationMenuLink
-                            className={
-                                navigationMenuTriggerStyle() + " bg-transparent"
-                            }
-                        >
-                            Settings
-                        </NavigationMenuLink>
-                    </Link> */}
                     <button
                         onClick={() => {
                             signOut();
-                            redirect("/");
+                            // router.refresh();
+                            router.push("/");
                         }}
                     >
                         <NavigationMenuLink

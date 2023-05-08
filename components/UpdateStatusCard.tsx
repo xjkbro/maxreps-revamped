@@ -13,8 +13,9 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
-import { redirect } from "next/navigation";
 import { auth, currentUser } from "@clerk/nextjs/app-beta";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export default async function UpdateStatusCard() {
     const { userId } = auth();

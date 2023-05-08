@@ -1,63 +1,29 @@
 "use client";
-import { prisma } from "@/lib/db";
 import { useUser } from "@clerk/nextjs";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { addLike, removeLike } from "@/lib/_actions/likes";
 
-export default function LikeButtons({ post }) {
+export const revalidate = 0;
+export default function LikeButtons({ post, userLiked }) {
     const { user } = useUser();
     const userId = user?.id;
-    const [found, setFound] = useState(
-        post?.likes.find((likedUsers) => likedUsers.likeId == userId)
-            ? true
-            : false
+    const [found, setFound] = useState(userLiked);
+    return (
+        <Button
+            onClick={() => {
+                if (found) {
+                    removeLike(post.id, userId);
+                    setFound(false);
+                } else {
+                    addLike(post.id, userId);
+                    setFound(true);
+                }
+            }}
+            variant={found ? "default" : "outline"}
+            className="text-xs"
+        >
+            ({post.likes.length}) Like
+        </Button>
     );
-    const addLike = async () => {
-        const { status } = await fetch(
-            "http://localhost:3000/api/posts/likes",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    action: "add",
-                    userId,
-                    postId: post.id,
-                }),
-            }
-        );
-        if (status == 200) setFound(true);
-    };
-    const removeLike = async () => {
-        const { status } = await fetch(
-            "http://localhost:3000/api/posts/likes",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    action: "remove",
-                    userId,
-                    postId: post.id,
-                }),
-            }
-        );
-        if (status == 200) setFound(false);
-    };
-
-    if (found)
-        return (
-            <Button onClick={removeLike} className="text-xs">
-                ({post.likes.length}) Like
-            </Button>
-        );
-    else
-        return (
-            <Button onClick={addLike} variant={"outline"} className="text-xs">
-                ({post.likes.length}) Like
-            </Button>
-        );
 }

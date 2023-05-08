@@ -11,7 +11,7 @@ export default async function Dashboard() {
         <div className="pb-12 max-w-[75%] mx-auto">
             <div className="flex items-center gap-4">
                 <h1 className="my-4 text-4xl font-bold">Dashboard</h1>
-                <LocationPicker />
+                {/* <LocationPicker /> */}
             </div>
             <section className="flex gap-4">
                 <div className="w-2/3 flex flex-col gap-4 overflow-y-hidden h-fit">
