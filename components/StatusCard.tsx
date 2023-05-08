@@ -6,6 +6,15 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 import Link from "next/link";
@@ -14,10 +23,39 @@ import { Heart } from "lucide-react";
 import format from "date-fns/format";
 import { formatDistance } from "date-fns";
 import { auth } from "@clerk/nextjs/app-beta";
+import { Textarea } from "@/components/ui/textarea";
+import { prisma } from "@/lib/db";
+import LikeButtons from "./LikeButtons";
 
-export default function StatusCard({ post }) {
-    // console.log(post);
+export default async function StatusCard({ post: status }) {
+    console.log(status);
     const { userId } = auth();
+    const post = await prisma.post.findUnique({
+        where: { id: status.id },
+        include: { user: true, likes: true, comments: true },
+    });
+
+    const addLike = async () => {
+        "use server";
+        const data = await prisma.likesOnPost.create({
+            data: {
+                postId: status.id,
+                likeId: userId,
+            },
+        });
+    };
+    const removeLike = async () => {
+        "use server";
+
+        const data = await prisma.likesOnPost.delete({
+            where: {
+                postId_likeId: {
+                    likeId: userId,
+                    postId: status.id,
+                },
+            },
+        });
+    };
     return (
         <Card className="">
             <div className="flex items-center justify-between gap-4 p-4">
@@ -31,7 +69,9 @@ export default function StatusCard({ post }) {
                     </Avatar>
                     <CardHeader className="p-0">
                         <CardTitle className="flex gap-4">
-                            <Link href="/dashboard">@{post.user.username}</Link>
+                            <Link href={`/users/${post.user.username}`}>
+                                @{post.user.username}
+                            </Link>
                         </CardTitle>
                     </CardHeader>
                 </div>
@@ -47,12 +87,82 @@ export default function StatusCard({ post }) {
                 </CardContent>
                 <CardFooter className="p-0 flex justify-between w-full text-sm text-gray-500">
                     <div className="gap-4 flex ">
-                        <Button variant={"outline"} className="text-xs">
-                            ({post.likes}) Like
-                        </Button>
-                        <Button variant={"outline"} className="text-xs">
+                        {/* {post?.likes.find(
+                            (likedUsers) => likedUsers.likeId == userId
+                        ) ? (
+                            <form action={removeLike}>
+                                <Button className="text-xs">
+                                    ({post.likes.length}) Like
+                                </Button>
+                            </form>
+                        ) : (
+                            <form action={addLike}>
+                                <Button variant={"outline"} className="text-xs">
+                                    ({post.likes.length}) Like
+                                </Button>
+                            </form>
+                        )} */}
+                        <LikeButtons post={post} />
+
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant={"outline"} className="text-xs">
+                                    ({post.comments.length}) Comment
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Comments</DialogTitle>
+
+                                    <DialogDescription className=" flex flex-col gap-2 pt-2 my-2">
+                                        <div className="h-96 overflow-y-scroll my-2">
+                                            {[1, 2, 3, 4, 5].map((comment) => (
+                                                <p
+                                                    key={comment}
+                                                    className="m-4"
+                                                >
+                                                    <Link
+                                                        className="font-semibold hover:underline"
+                                                        href={`/users/${post.user.username}`}
+                                                    >
+                                                        @{post.user.username}
+                                                    </Link>
+                                                    {": "}
+                                                    <span>
+                                                        Lorem ipsum dolor sit
+                                                        amet consectetur
+                                                        adipisicing elit.
+                                                        Sapiente nobis id harum
+                                                        nulla corporis, nemo
+                                                        fuga odit nam maxime
+                                                        doloribus veritatis
+                                                        incidunt quidem
+                                                        repellendus voluptate
+                                                        velit cumque omnis
+                                                        minima necessitatibus
+                                                        aspernatur aperiam.
+                                                    </span>
+                                                </p>
+                                            ))}
+                                        </div>
+                                        <h3 className="font-bold">
+                                            Add a Comment
+                                        </h3>
+                                        <Textarea maxLength={255} />
+                                        <Button
+                                            variant={"outline"}
+                                            className="text-xs w-fit self-end "
+                                        >
+                                            Comment
+                                        </Button>
+                                    </DialogDescription>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
+
+                        {/* <Button variant={"outline"} className="text-xs">
                             ({post.comments.length}) Comment
-                        </Button>
+                        </Button> */}
                     </div>
                     <span>
                         {formatDistance(new Date(post.createdAt), new Date(), {
@@ -61,6 +171,34 @@ export default function StatusCard({ post }) {
                     </span>
                     {/* <span>Feb 23, 2023 @ 10:45am</span> */}
                 </CardFooter>
+                {/* <div className="border-t mt-2">
+                    <div className="p-4">
+                        <div className="flex gap-3">
+                            <Avatar className="">
+                                <AvatarImage src={post.user.avatar} />
+                                <AvatarFallback>
+                                    {post.user.firstName.substr(0, 1)}
+                                    {post.user.lastName.substr(0, 1)}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                                <span className="mb-2 font-semibold">
+                                    <Link href={`/users/${post.user.username}`}>
+                                        @{post.user.username}
+                                    </Link>
+                                </span>
+                                <p className="text-sm">
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit. Sapiente nobis id harum
+                                    nulla corporis, nemo fuga odit nam maxime
+                                    doloribus veritatis incidunt quidem
+                                    repellendus voluptate velit cumque omnis
+                                    minima necessitatibus aspernatur aperiam.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div> */}
             </div>
         </Card>
     );

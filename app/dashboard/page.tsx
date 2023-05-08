@@ -6,11 +6,12 @@ import { prisma } from "@/lib/db";
 
 export default async function Dashboard() {
     const posts = await getPosts();
+
     return (
         <div className="pb-12 max-w-[75%] mx-auto">
             <div className="flex items-center gap-4">
                 <h1 className="my-4 text-4xl font-bold">Dashboard</h1>
-                {/* <LocationPicker /> */}
+                <LocationPicker />
             </div>
             <section className="flex gap-4">
                 <div className="w-2/3 flex flex-col gap-4 overflow-y-hidden h-fit">
@@ -31,14 +32,15 @@ export default async function Dashboard() {
 }
 
 const getPosts = async () => {
-    "use server";
+    // "use server";
     // const prisma = new PrismaClient();
     const posts = await prisma.post.findMany({
-        include: { user: true, comments: true },
+        include: { user: true, likes: true, comments: true },
         take: 20,
         orderBy: {
             createdAt: "desc",
         },
     });
+    console.log(posts[0]);
     return posts;
 };

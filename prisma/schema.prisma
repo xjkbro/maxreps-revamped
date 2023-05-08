@@ -15,18 +15,20 @@ model User {
   lastName     String?
   avatar       String?
   email        String?
-  posts        Post[]
-  postComments PostComments[]
+  posts        Post[] // user's posts
+  postComments PostComments[] //user's comments
+  likedPosts   LikesOnPost[]
 }
 
 model Post {
   id        Int            @id @default(autoincrement())
   content   String
-  likes     Int            @default(0)
+  // likes      Int            @default(0)
   createdAt DateTime       @default(now())
   user      User           @relation(fields: [userId], references: [userId])
   userId    String
   comments  PostComments[]
+  likes     LikesOnPost[]
 
   @@index([userId])
 }
@@ -41,5 +43,18 @@ model PostComments {
   postId    Int
 
   @@index([userId])
+  @@index([postId])
+}
+
+model LikesOnPost {
+  // id         Int      @id @default(autoincrement())
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     Int // relation scalar field (used in the `@relation` attribute above)
+  like       User     @relation(fields: [likeId], references: [userId])
+  likeId     String // relation scalar field (used in the `@relation` attribute above)
+  assignedAt DateTime @default(now())
+
+  @@id([postId, likeId])
+  @@index([likeId])
   @@index([postId])
 }
