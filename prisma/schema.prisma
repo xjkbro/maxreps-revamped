@@ -18,17 +18,19 @@ model User {
   posts        Post[] // user's posts
   postComments PostComments[] //user's comments
   likedPosts   LikesOnPost[]
+  workouts     Workout[]
 }
 
 model Post {
-  id        Int            @id @default(autoincrement())
-  content   String
+  id         Int            @id @default(autoincrement())
+  content    String
+  attachment String?
   // likes      Int            @default(0)
-  createdAt DateTime       @default(now())
-  user      User           @relation(fields: [userId], references: [userId])
-  userId    String
-  comments  PostComments[]
-  likes     LikesOnPost[]
+  createdAt  DateTime       @default(now())
+  user       User           @relation(fields: [userId], references: [userId])
+  userId     String
+  comments   PostComments[]
+  likes      LikesOnPost[]
 
   @@index([userId])
 }
@@ -57,4 +59,16 @@ model LikesOnPost {
   @@id([postId, likeId])
   @@index([likeId])
   @@index([postId])
+}
+
+model Workout {
+  id       String @id @default(cuid())
+  user     User   @relation(fields: [userId], references: [userId])
+  userId   String
+  exercise String
+  entry    Json
+  // repetitions Json
+  // weight      Json
+
+  @@index([userId])
 }

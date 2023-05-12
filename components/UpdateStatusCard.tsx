@@ -16,10 +16,12 @@ import { prisma } from "@/lib/db";
 import { auth, currentUser } from "@clerk/nextjs/app-beta";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { MultiUploader } from "./MultiUploader";
 
 export default async function UpdateStatusCard() {
     const { userId } = auth();
     const user = await currentUser();
+
     async function addUpdate(data) {
         "use server";
         await prisma.post.create({
@@ -52,6 +54,7 @@ export default async function UpdateStatusCard() {
                         name="status"
                         placeholder="Type your message here."
                     />
+                    <MultiUploader />
                 </CardContent>
                 <CardFooter className="p-0 flex gap-4 w-full text-sm text-gray-500">
                     <Button type="submit" variant={"outline"}>
